@@ -2,7 +2,8 @@ import React from "react";
 import { Unit } from "./_components/_types/CardTypes";
 import Footer from "./_components/footer/Footer";
 import Section from "./_components/unitCard/SectionWrapper";
-
+import PropertyGrid from './_components/propertyCard/PropertyGrid';
+import { PropertyCard } from "./_components/_types/PropertyCard";
 const cardUnits: Unit[] = [
   {
     id: 1,
@@ -332,10 +333,36 @@ const saleProperties: Unit[] = [
   },
 ];
 
+const properties: PropertyCard[] = [
+  {
+    id: 1,
+    title: "New York",
+    count: 8,
+    image: '/images/c1.png',
+    link: "/properties/new-york",
+  },
+  {
+    id: 2,
+    title: "Chicago",
+    count: 2,
+    image: '/images/c2.png',
+    link: "/properties/chicago",
+  },
+  {
+    id: 3,
+    title: "Los Angeles",
+    count: 1,
+    image: '/images/c3.png',
+    link: "/properties/los-angeles",
+  },
+];
+
 const Home: React.FC = () => {
   return (
     <div>
     <div className="container mx-auto p-4 sm:p-6">
+    <PropertyGrid properties={properties} />
+
       <Section
         title="Discover Our Best Deals"
         units={cardUnits}
