@@ -1,4 +1,4 @@
-export interface PropertyCard {
+export interface Property {
     id: number;
     title: string;
     count: number;

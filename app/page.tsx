@@ -3,7 +3,7 @@ import { Unit } from "./_components/_types/CardTypes";
 import Footer from "./_components/footer/Footer";
 import Section from "./_components/unitCard/SectionWrapper";
 import PropertyGrid from './_components/propertyCard/PropertyGrid';
-import { PropertyCard } from "./_components/_types/PropertyCard";
+import { Property } from "./_components/_types/PropertyType";
 const cardUnits: Unit[] = [
   {
     id: 1,
@@ -333,7 +333,7 @@ const saleProperties: Unit[] = [
   },
 ];
 
-const properties: PropertyCard[] = [
+const properties: Property[] = [
   {
     id: 1,
     title: "New York",
