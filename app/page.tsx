@@ -2,8 +2,8 @@ import React from "react";
 import { Unit } from "./_components/_types/CardTypes";
 import Footer from "./_components/footer/Footer";
 import Section from "./_components/unitCard/SectionWrapper";
-import PropertyGrid from './_components/propertyCard/PropertyGrid';
 import { Property } from "./_components/_types/PropertyType";
+import PropertyGrid from "./_components/propertyCard/propertyGrid";
 const cardUnits: Unit[] = [
   {
     id: 1,
