@@ -19,7 +19,7 @@ const UnitCard: React.FC<UnitCardProps> = ({ unit }) => {
   const handleCardClick = () => {
     if (isUserLoggedIn) {
       // If the user is logged in, allow the navigation to the unit details page (or wherever you want)
-      router.push(`/unit-details/${unit.id}`);  // Modify this to the correct route
+      router.push(`/unitDetails/${unit.id}`);  // Modify this to the correct route
     } else {
       // If the user is not logged in, redirect them to the login page
       router.push('/login');

@@ -4,6 +4,7 @@ import Footer from "./_components/footer/Footer";
 import Section from "./_components/unitCard/SectionWrapper";
 import { Project } from "./_components/_types/ProjectType";
 import ProjectsGrid from "./_components/projectsCard/projectsGrid";
+import Header from "./_components/header/Header";
 
 const cardUnits: Unit[] = [
   {
@@ -364,6 +365,7 @@ const Home: React.FC = () => {
   return (
     <div>
     <div className="container mx-auto p-4 sm:p-6">
+      <Header/>
     <ProjectsGrid projects={projects} />
 
       <Section
