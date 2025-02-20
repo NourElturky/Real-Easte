@@ -3,6 +3,7 @@ import Image from "next/image";
 import { AreaIcon, BadroomIcon, BathroomIcon } from "../_components/svgs";
 
 const propertyData = {
+  name: "Duplex For Sale In The La Vida",
   price: "3,654,000",
   downPayment: "0",
   monthlyPayment: "30,450",
@@ -19,20 +20,31 @@ const propertyData = {
 
 const UnitDetails = () => {
   return (
-    <div className="max-w-5xl mx-auto p-6 bg-white shadow-lg rounded-lg text-left">
+    <div className="max-w-full mx-auto p-6 bg-white text-left">
+      <p className="text-xl font-bold mb-3">{propertyData.name}</p>
+
       {/* Price Details */}
       <div className="flex justify-start items-center mb-4 gap-8">
         <div>
           <p className="text-gray-500 text-sm">Starting From</p>
-          <p className="text-2xl font-bold">{propertyData.price}<span className="text-xs"> EGP</span></p>
+          <p className="text-2xl font-bold">
+            {propertyData.price}
+            <span className="text-xs"> EGP</span>
+          </p>
         </div>
         <div>
           <p className="text-gray-500 text-sm">Minimum Downpayment</p>
-          <p className="text-xl font-bold">{propertyData.downPayment}<span className="text-xs"> EGP</span></p>
+          <p className="text-xl font-bold">
+            {propertyData.downPayment}
+            <span className="text-xs"> EGP</span>
+          </p>
         </div>
         <div>
           <p className="text-gray-500 text-sm">Minimum Monthly Payment</p>
-          <p className="text-xl font-bold">{propertyData.monthlyPayment}<span className="text-xs"> EGP</span></p>
+          <p className="text-xl font-bold">
+            {propertyData.monthlyPayment}
+            <span className="text-xs"> EGP</span>
+          </p>
         </div>
       </div>
 

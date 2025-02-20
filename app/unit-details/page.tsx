@@ -10,7 +10,7 @@ const propertyData = [
 ];
 const Page = () => {
   return (
-    <div>
+    <div className="container mx-auto p-4 sm:p-6">
       <UnitDetails/>
       <PropertyDetails  details={propertyData}/>
     </div>
