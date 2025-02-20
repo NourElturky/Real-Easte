@@ -24,15 +24,15 @@ const UnitDetails = () => {
       <div className="flex justify-start items-center mb-4 gap-8">
         <div>
           <p className="text-gray-500 text-sm">Starting From</p>
-          <p className="text-2xl font-bold">{propertyData.price} EGP</p>
+          <p className="text-2xl font-bold">{propertyData.price}<span className="text-xs"> EGP</span></p>
         </div>
         <div>
           <p className="text-gray-500 text-sm">Minimum Downpayment</p>
-          <p className="text-xl">{propertyData.downPayment} EGP</p>
+          <p className="text-xl font-bold">{propertyData.downPayment}<span className="text-xs"> EGP</span></p>
         </div>
         <div>
           <p className="text-gray-500 text-sm">Minimum Monthly Payment</p>
-          <p className="text-xl font-bold">{propertyData.monthlyPayment} EGP</p>
+          <p className="text-xl font-bold">{propertyData.monthlyPayment}<span className="text-xs"> EGP</span></p>
         </div>
       </div>
 
