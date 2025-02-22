@@ -1,7 +1,7 @@
 export interface ProjectDetails {
-    id: Number;
-    developerName: String;
-    description: String;
-    developerDescription: String;
-    image: String;
-}
+    id: number;
+    developerName: string;
+    description: string;
+    developerDescription: string;
+    image: string;  
+  }
