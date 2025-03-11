@@ -11,8 +11,15 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 const Header = () => {
+  const session = useSession();
+  const router = useRouter();
+
+  console.log({ session });
+  const isAuthenticated = session.status !== "unauthenticated";
   const [activeTab, setActiveTab] = useState<"sale" | "rent">("sale");
   const [selectedType, setSelectedType] = useState<string>("Type");
 
@@ -35,9 +42,14 @@ const Header = () => {
             <LogoIcon />
             <span>YourHome</span>
           </div>
-          <button className="flex items-end gap-2 border border-gray-700 px-8 py-2 rounded-lg text-xs font-semibold">
-            <span>Login</span>
-          </button>
+          {!isAuthenticated && (
+            <button
+              onClick={() => router.push("/login")}
+              className="flex items-end gap-2 border border-gray-700 px-8 py-2 rounded-lg text-xs font-semibold"
+            >
+              <span>Login</span>
+            </button>
+          )}
         </nav>
         <Separator className="mt-4" />
         {/* Hero Section */}
