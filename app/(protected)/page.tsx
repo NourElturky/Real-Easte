@@ -1,10 +1,10 @@
 import React from "react";
-import { Unit } from "./_components/_types/CardTypes";
-import Footer from "./_components/footer/Footer";
-import Section from "./_components/unitCard/SectionWrapper";
-import { Project } from "./_components/_types/ProjectType";
-import ProjectsGrid from "./_components/projectsCard/projectsGrid";
-import Header from "./_components/header/Header";
+import { Unit } from "../_components/_types/CardTypes";
+import Footer from "../_components/footer/Footer";
+import Section from "../_components/unitCard/SectionWrapper";
+import { Project } from "../_components/_types/ProjectType";
+import ProjectsGrid from "../_components/projectsCard/projectsGrid";
+import Header from "../_components/header/Header";
 
 const cardUnits: Unit[] = [
   {
@@ -333,62 +333,59 @@ const saleProperties: Unit[] = [
     status: "For Sale",
     delivery: "Featured",
   },
-]
-  const projects: Project[] = [
-    {
-      id: 1,
-      title: "New York",
-      count: 8,
-      image: '/images/c1.png',
-      link: "/projects/new-york",
-    },
-    {
-      id: 2,
-      title: "Chicago",
-      count: 2,
-      image: '/images/c2.png',
-      link: "/projects/chicago",
-    },
-    {
-      id: 3,
-      title: "Los Angeles",
-      count: 1,
-      image: '/images/c3.png',
-      link: "/projects/los-angeles",
-    },
-  ];
-
-
-
+];
+const projects: Project[] = [
+  {
+    id: 1,
+    title: "New York",
+    count: 8,
+    image: "/images/c1.png",
+    link: "/projects/new-york",
+  },
+  {
+    id: 2,
+    title: "Chicago",
+    count: 2,
+    image: "/images/c2.png",
+    link: "/projects/chicago",
+  },
+  {
+    id: 3,
+    title: "Los Angeles",
+    count: 1,
+    image: "/images/c3.png",
+    link: "/projects/los-angeles",
+  },
+];
 
 const Home: React.FC = () => {
   return (
     <div>
-    <div className="container mx-auto p-4 sm:p-6">
-      <Header/>
-    <ProjectsGrid projects={projects} />
+      <div className="container mx-auto p-4 sm:p-6">
+        <Header />
+        <ProjectsGrid projects={projects} />
 
-      <Section
-        title="Discover Our Best Deals"
-        units={cardUnits}
-        gridColumns="grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
-        itemsPerPage={6}
-      />
-      <Section
-        title="Recent Properties for Rent"
-        units={rentProperties}
-        gridColumns="grid-cols-1 sm:grid-cols-2 lg:grid-cols-4"
-        itemsPerPage={4}
-      />
-      <Section
-        title="Recent Properties for Sale"
-        units={saleProperties}
-        gridColumns="grid-cols-1 sm:grid-cols-2 lg:grid-cols-4"
-        itemsPerPage={4}
-      />
+        <Section
+          title="Discover Our Best Deals"
+          units={cardUnits}
+          gridColumns="grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
+          itemsPerPage={6}
+        />
+        <Section
+          title="Recent Properties for Rent"
+          units={rentProperties}
+          gridColumns="grid-cols-1 sm:grid-cols-2 lg:grid-cols-4"
+          itemsPerPage={4}
+        />
+        <Section
+          title="Recent Properties for Sale"
+          units={saleProperties}
+          gridColumns="grid-cols-1 sm:grid-cols-2 lg:grid-cols-4"
+          itemsPerPage={4}
+        />
+      </div>
+      <Footer />
     </div>
-    <Footer />
-  </div>
   );
 };
 

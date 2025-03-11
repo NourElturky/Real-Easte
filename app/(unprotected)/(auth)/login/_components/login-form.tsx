@@ -2,24 +2,30 @@
 import { useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { useRouter } from "next/navigation"; 
+import { useRouter } from "next/navigation";
+import { getSession, signIn } from "next-auth/react";
+import { toast } from "sonner";
 
-export const Login = () => {
+export const LoginForm = () => {
   const [isSignUp, setIsSignUp] = useState(false);
-  const router = useRouter(); 
+
+  const router = useRouter();
   const signUpValidationSchema = Yup.object({
     firstName: Yup.string().required("First name is required"),
     lastName: Yup.string().required("Last name is required"),
-    email: Yup.string().email("Invalid email format").required("Email is required"),
+    email: Yup.string()
+      .email("Invalid email format")
+      .required("Email is required"),
     password: Yup.string()
       .min(8, "Password must be at least 8 characters")
       .required("Password is required"),
-    phone: Yup.string()
-      .required("Phone number is required")
+    phone: Yup.string().required("Phone number is required"),
   });
 
   const loginValidationSchema = Yup.object({
-    email: Yup.string().email("Invalid email format").required("Email is required"),
+    email: Yup.string()
+      .email("Invalid email format")
+      .required("Email is required"),
     password: Yup.string()
       .min(8, "Password must be at least 8 characters")
       .required("Password is required"),
@@ -36,13 +42,29 @@ export const Login = () => {
     validationSchema: isSignUp ? signUpValidationSchema : loginValidationSchema,
     validateOnChange: false,
     validateOnBlur: true,
-    onSubmit: (values) => {
+    onSubmit: async (values) => {
       localStorage.setItem("userData", JSON.stringify(values));
-      console.log(values);
-      if (!isSignUp) {
-        router.push("/"); 
-      } else {
+
+      if (isSignUp) {
         router.push("/");
+      } else {
+        const signinResponse = await signIn("credentials", {
+          email: values.email,
+          password: values.password,
+          redirect: false,
+        });
+        console.log({ signinResponse });
+
+        const session = await getSession();
+        console.log({ session });
+        if (!session?.user) {
+          toast.error("Invalid Credentials!");
+          return;
+        } else {
+          console.log("LOGGED IN");
+        }
+
+        window.location.reload();
       }
     },
   });
@@ -51,8 +73,9 @@ export const Login = () => {
     <div className="flex items-center justify-center h-screen bg-gray-100">
       <div className="relative w-[800px] h-[500px] overflow-hidden bg-white rounded-lg shadow-lg">
         <div
-          className={`absolute top-0 h-full w-1/2 bg-[#1F4B43] text-white flex items-center justify-center transition-transform duration-500 ${isSignUp ? "translate-x-full" : "translate-x-0"
-            }`}
+          className={`absolute top-0 h-full w-1/2 bg-[#1F4B43] text-white flex items-center justify-center transition-transform duration-500 ${
+            isSignUp ? "translate-x-full" : "translate-x-0"
+          }`}
         >
           <div className="text-center">
             <h1 className="text-3xl font-bold mb-4">
@@ -74,8 +97,9 @@ export const Login = () => {
 
         {/* Form Section (Login/SignUp) */}
         <div
-          className={`absolute top-0 h-full w-1/2 bg-white p-8 transition-transform duration-500 ${isSignUp ? "-translate-x-full" : "translate-x-0"
-            } right-0`}
+          className={`absolute top-0 h-full w-1/2 bg-white p-8 transition-transform duration-500 ${
+            isSignUp ? "-translate-x-full" : "translate-x-0"
+          } right-0`}
         >
           <h2 className="text-2xl font-bold mb-6 text-center">
             {isSignUp ? "Sign Up" : "Login"}
@@ -94,7 +118,9 @@ export const Login = () => {
                     className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#1F4B43]"
                   />
                   {formik.touched.firstName && formik.errors.firstName && (
-                    <div className="text-red-500 text-sm">{formik.errors.firstName}</div>
+                    <div className="text-red-500 text-sm">
+                      {formik.errors.firstName}
+                    </div>
                   )}
                 </div>
                 <div className="mb-4">
@@ -108,7 +134,9 @@ export const Login = () => {
                     className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#1F4B43]"
                   />
                   {formik.touched.lastName && formik.errors.lastName && (
-                    <div className="text-red-500 text-sm">{formik.errors.lastName}</div>
+                    <div className="text-red-500 text-sm">
+                      {formik.errors.lastName}
+                    </div>
                   )}
                 </div>
               </>
@@ -125,7 +153,9 @@ export const Login = () => {
                 className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#1F4B43]"
               />
               {formik.touched.email && formik.errors.email && (
-                <div className="text-red-500 text-sm">{formik.errors.email}</div>
+                <div className="text-red-500 text-sm">
+                  {formik.errors.email}
+                </div>
               )}
             </div>
             <div className="mb-4">
@@ -139,7 +169,9 @@ export const Login = () => {
                 className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#1F4B43]"
               />
               {formik.touched.password && formik.errors.password && (
-                <div className="text-red-500 text-sm">{formik.errors.password}</div>
+                <div className="text-red-500 text-sm">
+                  {formik.errors.password}
+                </div>
               )}
             </div>
 
@@ -155,7 +187,9 @@ export const Login = () => {
                   className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-[#1F4B43]"
                 />
                 {formik.touched.phone && formik.errors.phone && (
-                  <div className="text-red-500 text-sm">{formik.errors.phone}</div>
+                  <div className="text-red-500 text-sm">
+                    {formik.errors.phone}
+                  </div>
                 )}
               </div>
             )}
@@ -180,8 +214,7 @@ export const Login = () => {
             </button>
           </form>
 
-          <div className="flex justify-center my-6 space-x-4">
-          </div>
+          <div className="flex justify-center my-6 space-x-4"></div>
           <p className="text-gray-500 text-center">
             {isSignUp ? "Already have an account?" : "Don't have an account?"}
             <span

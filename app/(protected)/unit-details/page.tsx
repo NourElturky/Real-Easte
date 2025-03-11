@@ -1,9 +1,9 @@
 import React from "react";
 import UnitDetails from "./UnitDetails";
 import PropertyDetails from "./PropertyDetails";
-import ProjectDetailsComponent from "../_components/ProjectDetailsComponent/ProjectDetailsComponent";
-import { ProjectDetails } from "../_components/_types/ProjectDetails";
 import UserForm from "./UserForm";
+import { ProjectDetails } from "@/app/_components/_types/ProjectDetails";
+import ProjectDetailsComponent from "@/app/_components/ProjectDetailsComponent/ProjectDetailsComponent";
 
 const propertyData = [
   { label: "Unit Code", value: "P103447I1" },

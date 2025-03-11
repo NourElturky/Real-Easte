@@ -1,6 +1,6 @@
 "use client";
+import { AreaIcon, BadroomIcon, BathroomIcon } from "@/app/_components/svgs";
 import Image from "next/image";
-import { AreaIcon, BadroomIcon, BathroomIcon } from "../_components/svgs";
 
 const propertyData = {
   name: "Duplex For Sale In The La Vida",
