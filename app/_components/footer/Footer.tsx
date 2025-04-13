@@ -18,12 +18,9 @@ const Footer: React.FC = () => {
     {
       title: "Discover",
       links: [
-        { label: "Miami", href: "#" },
-        { label: "New York", href: "#" },
-        { label: "Chicago", href: "#" },
-        { label: "Florida", href: "#" },
-        { label: "Los Angeles", href: "#" },
-        { label: "San Diego", href: "#" },
+        { label: "New Cairo", href: "#" },
+        { label: "Future City", href: "#" },
+        { label: "Shikh Zayid", href: "#" },
       ],
     },
     {
@@ -40,7 +37,7 @@ const Footer: React.FC = () => {
     },
     {
       title: "Contact Us",
-      content: ["hi@justhome.com", "(123) 456-7890"],
+      content: ["hi@justhome.com", "(20) 1021184647"],
     },
     {
       title: "Our Address",
