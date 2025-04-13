@@ -53,6 +53,7 @@ export const authOptions = {
           });
           if (!response.ok || response.status !== 200) {
             const error = await response.json();
+            console.error("Login failed:", error);
             return null;
           }
           const data = await response.json();

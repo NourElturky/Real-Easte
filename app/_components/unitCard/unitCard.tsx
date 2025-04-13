@@ -1,3 +1,4 @@
+"use client"
 import { useRouter } from "next/navigation";
 import { Unit } from "../_types/CardTypes";
 import Image from "next/image";
