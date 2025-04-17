@@ -26,15 +26,16 @@ const UnitCard: React.FC<UnitCardProps> = ({ unit }) => {
 
   const handleCardClick = () => {
     if (isUserLoggedIn) {
-      // If the user is logged in, allow the navigation to the unit details page (or wherever you want)
-      router.push(`/unit-details/`); // Modify this to the correct route
+      // If the user is logged in, navigate to the specific unit details page
+      router.push(`/unit-details/${unit.id}`);
     } else {
       // If the user is not logged in, redirect them to the login page
       router.push("/login");
     }
   };
 
-  const toggleFavorite = () => {
+  const toggleFavorite = (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent the card click event from triggering
     setIsFavorited((prev) => !prev);
   };
 
