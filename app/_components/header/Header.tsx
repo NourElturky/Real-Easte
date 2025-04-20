@@ -62,8 +62,7 @@ const Header = () => {
           <div className="flex justify-start gap-4 px-8 text-xs font-semibold">
             <Link href="/">Home</Link>
             <Link href="/projects">Projects</Link>
-            <Link href="/search">Search</Link>
-            <Link href="/contact">Contact</Link>
+            <Link href="/about-us">About Us</Link>
           </div>
           <div className="text-[16px] font-semibold flex items-center space-x-2">
             <LogoIcon />
@@ -98,29 +97,6 @@ const Header = () => {
             From as low as $10 per day with limited-time offer discounts.
           </p>
 
-          {/* Tabs for Sale & Rent */}
-          <div className="flex justify-center space-x-6 mb-6">
-            <button
-              className={`pb-2 ${
-                activeTab === "sale"
-                  ? "border-b-2 border-[#1F4B43] font-semibold"
-                  : "text-gray-500"
-              }`}
-              onClick={() => setActiveTab("sale")}
-            >
-              Sale
-            </button>
-            <button
-              className={`pb-2 ${
-                activeTab === "rent"
-                  ? "border-b-2 border-[#1F4B43] font-semibold"
-                  : "text-gray-500"
-              }`}
-              onClick={() => setActiveTab("rent")}
-            >
-              Rent
-            </button>
-          </div>
         </section>
 
         {/* Simple Search Bar */}

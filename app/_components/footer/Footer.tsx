@@ -26,7 +26,7 @@ const Footer: React.FC = () => {
     {
       title: "Quick Links",
       links: [
-        { label: "About", href: "#" },
+        { label: "About", href: "/about" },
         { label: "Contact", href: "#" },
         { label: "FAQ's", href: "#" },
         { label: "Blog", href: "#" },
