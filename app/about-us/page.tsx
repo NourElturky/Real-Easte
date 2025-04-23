@@ -9,14 +9,14 @@ const teamLeader = {
 
 const secondRow = [
   { name: "Nada Medhat", image: "/images/nada.png", title: "Frontend Developer" },
-  { name: "Person Two", image: "/images/nada.png", title: "Frontend Developer" },
-  { name: "Person Three", image: "/images/nada.png", title: "Frontend Developer" },
+  { name: "Nourhan Hany", image: "/images/nourhan.png", title: "Frontend Developer" },
+  { name: "Nour Hany", image: "/images/nouur.png", title: "Frontend Developer" },
 ];
 
 const thirdRow = [
-  { name: "Person Four", image: "/images/nada.png", title: "Backend Developer" },
-  { name: "Person Five", image: "/images/nada.png", title: "Backend Developer" },
-  { name: "Person Six", image: "/images/nada.png", title: "Backend Developer" },
+  { name: "Narden Gourge", image: "/images/narden.png", title: "Backend Developer" },
+  { name: "Marina Yousef", image: "/images/marina.png", title: "Backend Developer" },
+  { name: "Mirna Saad", image: "/images/mirna.png", title: "Backend Developer" },
 ];
 
 export default function AboutPage() {

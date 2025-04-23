@@ -61,7 +61,7 @@ const Header = () => {
         <nav className="container mx-auto flex justify-between items-center">
           <div className="flex justify-start gap-4 px-8 text-xs font-semibold">
             <Link href="/">Home</Link>
-            <Link href="/projects">Projects</Link>
+            <Link href="/project">Projects</Link>
             <Link href="/about-us">About Us</Link>
           </div>
           <div className="text-[16px] font-semibold flex items-center space-x-2">
@@ -89,15 +89,14 @@ const Header = () => {
 
         {/* Hero Section */}
         <section className="py-16 text-center">
-          <h1 className="text-xl font-semibold mb-4">
-            The <span className="text-blue-500">#1</span> site real estate
-            professionals trust*
-          </h1>
-          <p className="text-gray-600 mb-6">
-            From as low as $10 per day with limited-time offer discounts.
-          </p>
+  <h1 className="text-xl font-semibold mb-4">
+    The <span className="text-[#1F4B43]">#1</span> platform future homeowners trust
+  </h1>
+  <p className="text-gray-600 mb-6">
+    Explore top properties, compare options, and invest smarter — all in one place.
+  </p>
+</section>
 
-        </section>
 
         {/* Simple Search Bar */}
         <div className="flex items-center p-2 rounded-full space-x-2 w-1/2 justify-center mx-auto bg-white">
@@ -135,7 +134,7 @@ const Header = () => {
             className="border shadow-sm text-[#1F4B43] px-4 py-2 rounded-full"
             onClick={toggleAdvancedSearch}
           >
-            {showSearchForm ? "Simple Search" : "Advanced"}
+            Filter
           </button>
 
           <button 

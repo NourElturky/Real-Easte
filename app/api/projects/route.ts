@@ -6,22 +6,22 @@ const projects: Project[] = [
   {
     id: 1,
     title: "New Cairo",
-    count: 8,
-    image: "/images/c1.png",
+    count: 9,
+    image: "/images/new-cairo.png",
     link: "/projects/new-cairo",
   },
   {
     id: 2,
     title: "Future City",
-    count: 2,
-    image: "/images/c2.png",
+    count: 8,
+    image: "/images/future.png",
     link: "/projects/future-city",
   },
   {
     id: 3,
     title: "Shekh Zayid",
-    count: 1,
-    image: "/images/c3.png",
+    count: 10,
+    image: "/images/shekh-zayed.png",
     link: "/projects/shekh-zayid",
   },
 ];

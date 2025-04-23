@@ -34,21 +34,21 @@ const projectDetails: { [key: number]: ProjectDetails } = {
     developerName: "Cairo Development",
     description: "New Cairo is a modern and luxurious residential complex located in the heart of Cairo. It offers a wide range of properties from apartments to villas, with world-class amenities and services.",
     developerDescription: "Cairo Development is a leading real estate developer in Egypt, known for creating modern, sustainable, and high-quality residential and commercial projects.",
-    image: "/images/developer1.png",
+    image: "/images/new-cairo.png",
   },
   2: {
     id: 2,
     developerName: "Future Developments",
     description: "Future City is an innovative residential complex designed for modern living with smart home features, sustainable architecture, and abundant green spaces.",
     developerDescription: "Future Developments specializes in creating forward-thinking residential communities with a focus on sustainability and technology integration.",
-    image: "/images/developer2.png",
+    image: "/images/future.png",
   },
   3: {
     id: 3,
     developerName: "Zayid Estates",
     description: "Shekh Zayid offers luxurious villas and apartments in a gated community with 24/7 security, swimming pools, gym facilities, and beautiful landscaped gardens.",
     developerDescription: "Zayid Estates has been developing premium residential properties in Egypt for over 20 years, with a reputation for quality and excellence.",
-    image: "/images/developer3.png",
+    image: "/images/shekh-zayed.png",
   },
 };
 
