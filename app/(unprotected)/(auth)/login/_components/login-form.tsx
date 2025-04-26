@@ -4,10 +4,12 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useRouter } from "next/navigation";
 import { getSession, signIn } from "next-auth/react";
+import { authService } from "@/lib/api";
 import { toast } from "sonner";
 
 export const LoginForm = () => {
   const [isSignUp, setIsSignUp] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const router = useRouter();
   const signUpValidationSchema = Yup.object({
@@ -43,28 +45,62 @@ export const LoginForm = () => {
     validateOnChange: false,
     validateOnBlur: true,
     onSubmit: async (values) => {
-      localStorage.setItem("userData", JSON.stringify(values));
-
-      if (isSignUp) {
-        router.push("/");
-      } else {
-        const signinResponse = await signIn("credentials", {
-          email: values.email,
-          password: values.password,
-          redirect: false,
-        });
-        console.log({ signinResponse });
-
-        const session = await getSession();
-        console.log({ session });
-        if (!session?.user) {
-          toast.error("Invalid Credentials!");
-          return;
+      setIsLoading(true);
+      try {
+        if (isSignUp) {
+          // Handle registration
+          await authService.register({
+            first_name: values.firstName,
+            last_name: values.lastName,
+            phone_number: values.phone,
+            email: values.email,
+            password: values.password,
+            password_confirmation: values.password,
+          });
+          
+          toast.success("Registration successful! Please login.");
+          setIsSignUp(false); // Switch to login form
         } else {
-          console.log("LOGGED IN");
+          // Handle login using NextAuth
+          console.log("Starting login with:", values.email);
+          
+          // Test for common login issues
+          console.log("Environment check:", {
+            apiUrl: process.env.NEXT_PUBLIC_BASE_API_URL,
+            nextAuthUrl: process.env.NEXTAUTH_URL,
+          });
+          
+          const signinResponse = await signIn("credentials", {
+            email: values.email,
+            password: values.password,
+            redirect: false,
+          });
+          
+          console.log("NextAuth response:", signinResponse);
+          
+          if (signinResponse?.error) {
+            toast.error(`Login failed: ${signinResponse.error}`);
+            console.error("NextAuth error:", signinResponse.error);
+            return;
+          }
+          
+          // Try to get the session
+          const session = await getSession();
+          console.log("Session after signin:", session);
+          
+          if (!session?.user) {
+            toast.error("Session could not be established. Please try again.");
+            return;
+          }
+          
+          toast.success("Login successful!");
+          router.push("/");
         }
-
-        window.location.reload();
+      } catch (error) {
+        console.error("Authentication error:", error);
+        toast.error(error instanceof Error ? error.message : "Authentication failed");
+      } finally {
+        setIsLoading(false);
       }
     },
   });
@@ -89,6 +125,7 @@ export const LoginForm = () => {
             <button
               onClick={() => setIsSignUp(!isSignUp)}
               className="px-6 py-2 border border-white rounded hover:bg-white hover:text-[#1F4B43] transition"
+              disabled={isLoading}
             >
               {isSignUp ? "Login" : "SIGN UP"}
             </button>
@@ -209,17 +246,24 @@ export const LoginForm = () => {
             <button
               type="submit"
               className="w-full bg-[#1F4B43] text-white py-2 rounded hover:bg-[#155E52] transition"
+              disabled={isLoading}
             >
-              {isSignUp ? "SIGN UP" : "SIGN IN"}
+              {isLoading 
+                ? "Please wait..." 
+                : isSignUp ? "SIGN UP" : "SIGN IN"}
             </button>
+            
+            <div className="mt-2 text-center text-sm text-gray-600">
+              {isLoading && "Processing your request..."}
+            </div>
           </form>
 
           <div className="flex justify-center my-6 space-x-4"></div>
           <p className="text-gray-500 text-center">
             {isSignUp ? "Already have an account?" : "Don't have an account?"}
             <span
-              onClick={() => setIsSignUp(!isSignUp)}
-              className="text-[#1F4B43] hover:underline cursor-pointer"
+              onClick={() => !isLoading && setIsSignUp(!isSignUp)}
+              className={`text-[#1F4B43] hover:underline cursor-pointer ${isLoading ? 'opacity-50' : ''}`}
             >
               {isSignUp ? "Log In" : "Sign Up"}
             </span>

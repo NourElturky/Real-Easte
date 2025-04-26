@@ -9,6 +9,7 @@ interface SectionProps {
   units: Unit[];
   gridColumns?: string;
   itemsPerPage: number;
+  hideTitle?: boolean;
 }
 
 const Section: React.FC<SectionProps> = ({
@@ -16,6 +17,7 @@ const Section: React.FC<SectionProps> = ({
   units,
   gridColumns,
   itemsPerPage,
+  hideTitle = false,
 }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const totalPages = Math.ceil(units.length / itemsPerPage);
@@ -33,25 +35,40 @@ const Section: React.FC<SectionProps> = ({
 
   return (
     <div className="mb-10">
-      <UnitGrid title={title} units={currentUnits} gridColumns={gridColumns} />
+      <UnitGrid 
+        title={title} 
+        units={currentUnits} 
+        gridColumns={gridColumns} 
+        hideTitle={hideTitle}
+      />
 
-      <div className="flex justify-center gap-6 mt-4 ">
-        <button
-          onClick={() => handlePageChange(currentPage - 1)}
-          disabled={currentPage === 1}
-          className="px-2 py-2 bg-gray-200  rounded-full disabled:opacity-50"
-        >
-          <LeftArrowIcon />
-        </button>
+      {totalPages > 1 && (
+        <div className="flex justify-center gap-6 mt-4">
+          <button
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+            className="px-2 py-2 bg-gray-200 rounded-full disabled:opacity-50"
+            aria-label="Previous page"
+          >
+            <LeftArrowIcon />
+          </button>
 
-        <button
-          onClick={() => handlePageChange(currentPage + 1)}
-          disabled={currentPage === totalPages}
-          className="px-2 py-2 bg-gray-200  rounded-full disabled:opacity-50"
-        >
-          <RightArrowIcon />
-        </button>
-      </div>
+          <div className="flex items-center">
+            <span className="text-sm text-gray-600">
+              Page {currentPage} of {totalPages}
+            </span>
+          </div>
+
+          <button
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === totalPages}
+            className="px-2 py-2 bg-gray-200 rounded-full disabled:opacity-50"
+            aria-label="Next page"
+          >
+            <RightArrowIcon />
+          </button>
+        </div>
+      )}
     </div>
   );
 };
