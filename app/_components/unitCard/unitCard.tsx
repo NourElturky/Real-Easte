@@ -11,6 +11,9 @@ import {
   FavoriteIcon,
 } from "../svgs";
 import { useState } from "react";
+import { useSession } from "next-auth/react";
+import { toast } from "sonner";
+import { unitService } from "@/lib/api";
 
 interface UnitCardProps {
   unit: Unit;
@@ -18,24 +21,40 @@ interface UnitCardProps {
 
 const UnitCard: React.FC<UnitCardProps> = ({ unit }) => {
   const router = useRouter();
+  const { data: session } = useSession();
   const [isFavorited, setIsFavorited] = useState(false);
 
-  // Check if the user is logged in by verifying the user data in localStorage
-  const isUserLoggedIn =
-    typeof window !== "undefined" && localStorage.getItem("userData");
-
   const handleCardClick = () => {
-    if (isUserLoggedIn) {
-      // If the user is logged in, allow the navigation to the unit details page (or wherever you want)
-      router.push(`/unit-details/`); // Modify this to the correct route
+    if (session?.user) {
+      // If the user is logged in, navigate to the unit details page with the unit ID
+      router.push(`/unit-details?id=${unit.id}`);
     } else {
       // If the user is not logged in, redirect them to the login page
       router.push("/login");
     }
   };
 
-  const toggleFavorite = () => {
-    setIsFavorited((prev) => !prev);
+  const toggleFavorite = async (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent card click when clicking the favorite icon
+    
+    if (!session?.user) {
+      toast.error("Please login to add favorites");
+      return;
+    }
+
+    try {
+      setIsFavorited((prev) => !prev);
+      
+      // Only make API call if the user is logged in
+      if (session?.user) {
+        await unitService.addToFavorites(unit.id);
+        toast.success(isFavorited ? "Removed from favorites" : "Added to favorites");
+      }
+    } catch (error) {
+      console.error("Error toggling favorite:", error);
+      setIsFavorited((prev) => !prev); // Revert state on error
+      toast.error("Failed to update favorites");
+    }
   };
 
   return (
@@ -68,10 +87,12 @@ const UnitCard: React.FC<UnitCardProps> = ({ unit }) => {
         </div>
 
         {/* Heart Icon */}
-        <div className="absolute top-5 right-5 cursor-pointer">
+        <div 
+          className="absolute top-5 right-5 cursor-pointer"
+          onClick={toggleFavorite}
+        >
           <FavoriteIcon
             fill={isFavorited ? "red" : "white"}
-            onClick={toggleFavorite}
           />
         </div>
       </div>

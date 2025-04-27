@@ -15,18 +15,20 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { SearchFilters } from "@/lib/api/searchService";
 
-const Header = () => {
-  const {  status } = useSession();
+interface HeaderProps {
+  onSearch?: (filters: SearchFilters) => void;
+}
+
+const Header: React.FC<HeaderProps> = ({ onSearch }) => {
+  const { status } = useSession();
   const router = useRouter();
   
-  const [activeTab, setActiveTab] = useState<"sale" | "rent">("sale");
+  const [activeTab, setActiveTab] = useState<"For Sale" | "For Rent">("For Sale");
   const [selectedType, setSelectedType] = useState<string>("Type");
   const [showFilters, setShowFilters] = useState(false);
-
-  const updateFilter = (key: keyof typeof filters, value: string) => {
-    setFilters((prev) => ({ ...prev, [key]: value }));
-  };
+  const [keyword, setKeyword] = useState("");
   const [filters, setFilters] = useState({
     bathrooms: "",
     bedrooms: "",
@@ -35,6 +37,36 @@ const Header = () => {
     minPrice: "",
     maxPrice: "",
   });
+
+  const updateFilter = (key: keyof typeof filters, value: string) => {
+    setFilters((prev) => ({ ...prev, [key]: value }));
+  };
+
+  const handleSearch = () => {
+    if (onSearch) {
+      const searchFilters: SearchFilters = {
+        keyword,
+        unit_type: selectedType !== "Type" ? selectedType : undefined,
+        status: activeTab as 'For Sale' | 'For Rent',
+      };
+
+      // Add numeric filters when they're set
+      if (filters.bedrooms) searchFilters.min_bedrooms = parseInt(filters.bedrooms);
+      if (filters.bathrooms) searchFilters.min_bathrooms = parseInt(filters.bathrooms);
+      
+      if (filters.minArea) searchFilters.min_area = parseInt(filters.minArea);
+      if (filters.maxArea) searchFilters.max_area = parseInt(filters.maxArea);
+      
+      if (filters.minPrice) searchFilters.min_price = parseInt(filters.minPrice);
+      if (filters.maxPrice) searchFilters.max_price = parseInt(filters.maxPrice);
+
+      console.log("Searching with filters:", searchFilters);
+      onSearch(searchFilters);
+    } else {
+      console.log("Search handler not provided");
+    }
+  };
+
   return (
     <>
       {/* Header */}
@@ -46,9 +78,9 @@ const Header = () => {
       >
         <nav className="container mx-auto flex justify-between items-center">
           <div className="flex justify-start gap-4 px-8 text-xs font-semibold">
-            <Link href="/home">Discover</Link>
-            <Link href="/Projects">Projects</Link>
-            <Link href="/Contact">Contact</Link>
+            <Link href="/">Discover</Link>
+            <Link href="/projects">Projects</Link>
+            <Link href="/contact">Contact</Link>
           </div>
           <div className="text-[16px] font-semibold flex items-center space-x-2">
             <LogoIcon />
@@ -87,21 +119,21 @@ const Header = () => {
           <div className="flex justify-center space-x-6 mb-6">
             <button
               className={`pb-2 ${
-                activeTab === "sale"
+                activeTab === "For Sale"
                   ? "border-b-2 border-[#1F4B43] font-semibold"
                   : "text-gray-500"
               }`}
-              onClick={() => setActiveTab("sale")}
+              onClick={() => setActiveTab("For Sale")}
             >
               Sale
             </button>
             <button
               className={`pb-2 ${
-                activeTab === "rent"
+                activeTab === "For Rent"
                   ? "border-b-2 border-[#1F4B43] font-semibold"
                   : "text-gray-500"
               }`}
-              onClick={() => setActiveTab("rent")}
+              onClick={() => setActiveTab("For Rent")}
             >
               Rent
             </button>
@@ -124,11 +156,17 @@ const Header = () => {
               <DropdownMenuItem onClick={() => setSelectedType("Apartment")}>
                 Apartment
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setSelectedType("House")}>
-                House
-              </DropdownMenuItem>
               <DropdownMenuItem onClick={() => setSelectedType("Villa")}>
                 Villa
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setSelectedType("Duplex")}>
+                Duplex
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setSelectedType("Studio")}>
+                Studio
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setSelectedType("Type")}>
+                Any Type
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -136,127 +174,137 @@ const Header = () => {
             type="text"
             placeholder="Enter Keywords"
             className="p-2 border rounded-full flex-2 w-full focus:outline-none"
+            value={keyword}
+            onChange={(e) => setKeyword(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                handleSearch();
+              }
+            }}
           />
-<DropdownMenu open={showFilters} onOpenChange={setShowFilters}>
-  <DropdownMenuTrigger asChild className="focus:outline-none">
-    <button className="border shadow-sm text-[#1F4B43] px-4 py-2 rounded-full">
-      Filters
-    </button>
-  </DropdownMenuTrigger>
-  <DropdownMenuContent className="p-4 w-64 space-y-4">
-  {["bathrooms", "bedrooms", "area", "price"].map((key) => (
-  <div key={key} className="space-y-1">
-    <p className="text-xs capitalize text-gray-500">{key}</p>
 
-    {/* Area Range */}
-    {key === "area" ? (
-      <div className="flex gap-2">
-        {/* Min Area */}
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="w-full justify-start text-xs">
-              {filters.minArea || "Min Area"}
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            {[130, 150, 170, 190, 210, 230, 250, 270, 300].map((size) => (
-              <DropdownMenuItem
-                key={`min-area-${size}`}
-                onClick={() => updateFilter("minArea", size.toString())}
-              >
-                {size} m²
-              </DropdownMenuItem>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
+          <DropdownMenu open={showFilters} onOpenChange={setShowFilters}>
+            <DropdownMenuTrigger asChild className="focus:outline-none">
+              <button className="border shadow-sm text-[#1F4B43] px-4 py-2 rounded-full">
+                Filters
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="p-4 w-64 space-y-4">
+              {["bathrooms", "bedrooms", "area", "price"].map((key) => (
+                <div key={key} className="space-y-1">
+                  <p className="text-xs capitalize text-gray-500">{key}</p>
 
-        {/* Max Area */}
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="w-full justify-start text-xs">
-              {filters.maxArea || "Max Area"}
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            {[130, 150, 170, 190, 210, 230, 250, 270, 300].map((size) => (
-              <DropdownMenuItem
-                key={`max-area-${size}`}
-                onClick={() => updateFilter("maxArea", size.toString())}
-              >
-                {size} m²
-              </DropdownMenuItem>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
-    ) : key === "price" ? (
-      // Keep the existing price range code here
-      <div className="flex gap-2">
-        {/* Min Price Dropdown */}
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="w-full justify-start text-xs">
-              {filters.minPrice || "Min Price"}
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            {[3, 4, 5, 6, 7, 8, 9, 10].map((mil) => (
-              <DropdownMenuItem
-                key={`min-${mil}`}
-                onClick={() => updateFilter("minPrice", (mil * 1_000_000).toString())}
-              >
-                {mil}M EGP
-              </DropdownMenuItem>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
+                  {/* Area Range */}
+                  {key === "area" ? (
+                    <div className="flex gap-2">
+                      {/* Min Area */}
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="outline" className="w-full justify-start text-xs">
+                            {filters.minArea || "Min Area"}
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent>
+                          {[50, 75, 100, 125, 150, 175, 200, 250, 300].map((size) => (
+                            <DropdownMenuItem
+                              key={`min-area-${size}`}
+                              onClick={() => updateFilter("minArea", size.toString())}
+                            >
+                              {size} m²
+                            </DropdownMenuItem>
+                          ))}
+                        </DropdownMenuContent>
+                      </DropdownMenu>
 
-        {/* Max Price Dropdown */}
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="w-full justify-start text-xs">
-              {filters.maxPrice || "Max Price"}
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            {[3, 4, 5, 6, 7, 8, 9, 10].map((mil) => (
-              <DropdownMenuItem
-                key={`max-${mil}`}
-                onClick={() => updateFilter("maxPrice", (mil * 1_000_000).toString())}
-              >
-                {mil}M EGP
-              </DropdownMenuItem>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
-    ) : (
-      // Bathrooms / Bedrooms
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="outline" className="w-full justify-start">
-            {filters[key as keyof typeof filters] || `Select ${key}`}
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent className="w-full">
-          {[1, 2, 3, 4, 5].map((value) => (
-            <DropdownMenuItem
-              key={value}
-              onClick={() => updateFilter(key as keyof typeof filters, value.toString())}
-            >
-              {value}
-            </DropdownMenuItem>
-          ))}
-        </DropdownMenuContent>
-      </DropdownMenu>
-    )}
-  </div>
-))}
+                      {/* Max Area */}
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="outline" className="w-full justify-start text-xs">
+                            {filters.maxArea || "Max Area"}
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent>
+                          {[100, 150, 200, 250, 300, 350, 400, 450, 500].map((size) => (
+                            <DropdownMenuItem
+                              key={`max-area-${size}`}
+                              onClick={() => updateFilter("maxArea", size.toString())}
+                            >
+                              {size} m²
+                            </DropdownMenuItem>
+                          ))}
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </div>
+                  ) : key === "price" ? (
+                    // Keep the existing price range code here
+                    <div className="flex gap-2">
+                      {/* Min Price Dropdown */}
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="outline" className="w-full justify-start text-xs">
+                            {filters.minPrice || "Min Price"}
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent>
+                          {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((mil) => (
+                            <DropdownMenuItem
+                              key={`min-${mil}`}
+                              onClick={() => updateFilter("minPrice", (mil * 1_000_000).toString())}
+                            >
+                              {mil}M EGP
+                            </DropdownMenuItem>
+                          ))}
+                        </DropdownMenuContent>
+                      </DropdownMenu>
 
-  </DropdownMenuContent>
-</DropdownMenu>
+                      {/* Max Price Dropdown */}
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="outline" className="w-full justify-start text-xs">
+                            {filters.maxPrice || "Max Price"}
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent>
+                          {[2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20].map((mil) => (
+                            <DropdownMenuItem
+                              key={`max-${mil}`}
+                              onClick={() => updateFilter("maxPrice", (mil * 1_000_000).toString())}
+                            >
+                              {mil}M EGP
+                            </DropdownMenuItem>
+                          ))}
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </div>
+                  ) : (
+                    // Bathrooms / Bedrooms
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="outline" className="w-full justify-start">
+                          {filters[key as keyof typeof filters] || `Select ${key}`}
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent className="w-full">
+                        {[1, 2, 3, 4, 5, 6].map((value) => (
+                          <DropdownMenuItem
+                            key={value}
+                            onClick={() => updateFilter(key as keyof typeof filters, value.toString())}
+                          >
+                            {value}
+                          </DropdownMenuItem>
+                        ))}
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  )}
+                </div>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
 
-          <button className="bg-[#1F4B43] text-white px-4 py-2 rounded-full">
+          <button 
+            className="bg-[#1F4B43] text-white px-4 py-2 rounded-full hover:bg-[#163b34] transition"
+            onClick={handleSearch}
+          >
             Search
           </button>
         </div>

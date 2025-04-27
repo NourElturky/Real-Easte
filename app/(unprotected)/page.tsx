@@ -1,16 +1,21 @@
-import React from "react";
+"use client";
+import React, { useEffect, useState } from "react";
 import { Unit } from "../_components/_types/CardTypes";
 import Footer from "../_components/footer/Footer";
 import Section from "../_components/unitCard/SectionWrapper";
 import { Project } from "../_components/_types/ProjectType";
 import ProjectsGrid from "../_components/projectsCard/projectsGrid";
 import Header from "../_components/header/Header";
+import { unitService, projectService } from "@/lib/api";
+import { SearchFilters, searchService } from "@/lib/api/searchService";
+import { toast } from "sonner";
 
-const cardUnits: Unit[] = [
+// Fallback data in case API fails
+const fallbackUnits: Unit[] = [
   {
     id: 1,
     location: "Skyper Pool Apartment",
-    address: "1020 Bloomingdale Ave",
+    address: "New Cairo, Egypt",
     bedrooms: 4,
     bathrooms: 2,
     area: 450,
@@ -21,7 +26,7 @@ const cardUnits: Unit[] = [
   {
     id: 2,
     location: "North Dillard Street",
-    address: "4330 Bell Shoals Rd",
+    address: "Sheikh Zayed, Egypt",
     bedrooms: 4,
     bathrooms: 2,
     area: 400,
@@ -33,7 +38,7 @@ const cardUnits: Unit[] = [
   {
     id: 3,
     location: "Eaton Garth Penthouse",
-    address: "7722 18th Ave, Brooklyn",
+    address: "Maadi, Egypt",
     bedrooms: 4,
     bathrooms: 2,
     area: 450,
@@ -44,297 +49,40 @@ const cardUnits: Unit[] = [
   {
     id: 4,
     location: "Skyper Pool Apartment",
-    address: "1020 Bloomingdale Ave",
+    address: "Heliopolis, Egypt",
     bedrooms: 4,
     bathrooms: 2,
     area: 450,
     price: "$280,000",
-    image: "/images/img1.png",
+    image: "/images/img4.png",
     status: "For Sale",
   },
   {
     id: 5,
     location: "North Dillard Street",
-    address: "4330 Bell Shoals Rd",
+    address: "October City, Egypt",
     bedrooms: 4,
     bathrooms: 2,
     area: 400,
     price: "$250/month",
-    image: "/images/img2.png",
+    image: "/images/img5.png",
     status: "For Rent",
   },
   {
     id: 6,
     location: "Eaton Garth Penthouse",
-    address: "7722 18th Ave, Brooklyn",
+    address: "Nasr City, Egypt",
     bedrooms: 4,
     bathrooms: 2,
     area: 450,
     price: "$180,000",
-    image: "/images/img8.png",
-    status: "For Sale",
-    delivery: "Featured",
-  },
-  {
-    id: 33,
-    location: "Skyper Pool Apartment",
-    address: "1020 Bloomingdale Ave",
-    bedrooms: 4,
-    bathrooms: 2,
-    area: 450,
-    price: "$280,000",
-    image: "/images/img4.png",
-    status: "For Sale",
-  },
-  {
-    id: 44,
-    location: "North Dillard Street",
-    address: "4330 Bell Shoals Rd",
-    bedrooms: 4,
-    bathrooms: 2,
-    area: 400,
-    price: "$250/month",
     image: "/images/img6.png",
-    status: "For Rent",
-    delivery: "Featured",
-  },
-  {
-    id: 77,
-    location: "Eaton Garth Penthouse",
-    address: "7722 18th Ave, Brooklyn",
-    bedrooms: 4,
-    bathrooms: 2,
-    area: 450,
-    price: "$180,000",
-    image: "/images/img7.png",
-    status: "For Sale",
-  },
-  {
-    id: 88,
-    location: "Skyper Pool Apartment",
-    address: "1020 Bloomingdale Ave",
-    bedrooms: 4,
-    bathrooms: 2,
-    area: 450,
-    price: "$280,000",
-    image: "/images/img2.png",
-    status: "For Sale",
-  },
-  {
-    id: 20,
-    location: "North Dillard Street",
-    address: "4330 Bell Shoals Rd",
-    bedrooms: 4,
-    bathrooms: 2,
-    area: 400,
-    price: "$250/month",
-    image: "/images/img6.png",
-    status: "For Rent",
-  },
-  {
-    id: 200,
-    location: "Eaton Garth Penthouse",
-    address: "7722 18th Ave, Brooklyn",
-    bedrooms: 4,
-    bathrooms: 2,
-    area: 450,
-    price: "$180,000",
-    image: "/images/img3.png",
     status: "For Sale",
     delivery: "Featured",
   },
 ];
 
-const rentProperties: Unit[] = [
-  {
-    id: 7,
-    location: "New Apartment Nice View",
-    address: "42 Avenue D, Brooklyn",
-    bedrooms: 4,
-    bathrooms: 1,
-    area: 460,
-    price: "$850/month",
-    image: "/images/img4.png",
-    status: "For Rent",
-    delivery: "Featured",
-  },
-  {
-    id: 8,
-    location: "Villa Garden With Pool",
-    address: "6822 Bay Pkwy, Brooklyn",
-    bedrooms: 3,
-    bathrooms: 1,
-    area: 350,
-    price: "$350/month",
-    image: "/images/img5.png",
-    status: "For Rent",
-  },
-  {
-    id: 9,
-    location: "Ely Parkway Apartment",
-    address: "7203 20th Ave, Brooklyn",
-    bedrooms: 4,
-    bathrooms: 1,
-    area: 560,
-    price: "$5,800/month",
-    image: "/images/img6.png",
-    status: "For Rent",
-    delivery: "Featured",
-  },
-  {
-    id: 10,
-    location: "Modern Elegant Apartment",
-    address: "1458 W Taylor St",
-    bedrooms: 4,
-    bathrooms: 1,
-    area: 300,
-    price: "$590/month",
-    image: "/images/img7.png",
-    status: "For Rent",
-  },
-  {
-    id: 1119,
-    location: "New Apartment Nice View",
-    address: "42 Avenue D, Brooklyn",
-    bedrooms: 4,
-    bathrooms: 1,
-    area: 460,
-    price: "$850/month",
-    image: "/images/img8.png",
-    status: "For Rent",
-    delivery: "Featured",
-  },
-  {
-    id: 28,
-    location: "Villa Garden With Pool",
-    address: "6822 Bay Pkwy, Brooklyn",
-    bedrooms: 3,
-    bathrooms: 1,
-    area: 350,
-    price: "$350/month",
-    image: "/images/img3.png",
-    status: "For Rent",
-  },
-  {
-    id: 90,
-    location: "Ely Parkway Apartment",
-    address: "7203 20th Ave, Brooklyn",
-    bedrooms: 4,
-    bathrooms: 1,
-    area: 560,
-    price: "$5,800/month",
-    image: "/images/img1.png",
-    status: "For Rent",
-    delivery: "Featured",
-  },
-  {
-    id: 130,
-    location: "Modern Elegant Apartment",
-    address: "1458 W Taylor St",
-    bedrooms: 4,
-    bathrooms: 1,
-    area: 300,
-    price: "$590/month",
-    image: "/images/img5.png",
-    status: "For Rent",
-  },
-];
-
-const saleProperties: Unit[] = [
-  {
-    id: 11,
-    location: "New Apartment Nice View",
-    address: "42 Avenue D, Brooklyn",
-    bedrooms: 4,
-    bathrooms: 1,
-    area: 460,
-    price: "$850/month",
-    image: "/images/img5.png",
-    status: "For Sale",
-  },
-  {
-    id: 12,
-    location: "Villa Garden With Pool",
-    address: "6822 Bay Pkwy, Brooklyn",
-    bedrooms: 3,
-    bathrooms: 1,
-    area: 350,
-    price: "$350/month",
-    image: "/images/img7.png",
-    status: "For Sale",
-    delivery: "Featured",
-  },
-  {
-    id: 13,
-    location: "Ely Parkway Apartment",
-    address: "7203 20th Ave, Brooklyn",
-    bedrooms: 4,
-    bathrooms: 1,
-    area: 560,
-    price: "$5,800/month",
-    image: "/images/img8.png",
-    status: "For Sale",
-  },
-  {
-    id: 14,
-    location: "Modern Elegant Apartment",
-    address: "1458 W Taylor St",
-    bedrooms: 4,
-    bathrooms: 1,
-    area: 300,
-    price: "$590/month",
-    image: "/images/img6.png",
-    status: "For Sale",
-    delivery: "Featured",
-  },
-  {
-    id: 121,
-    location: "New Apartment Nice View",
-    address: "42 Avenue D, Brooklyn",
-    bedrooms: 4,
-    bathrooms: 1,
-    area: 460,
-    price: "$850/month",
-    image: "/images/img1.png",
-    status: "For Sale",
-  },
-  {
-    id: 122,
-    location: "Villa Garden With Pool",
-    address: "6822 Bay Pkwy, Brooklyn",
-    bedrooms: 3,
-    bathrooms: 1,
-    area: 350,
-    price: "$350/month",
-    image: "/images/img3.png",
-    status: "For Sale",
-    delivery: "Featured",
-  },
-  {
-    id: 123,
-    location: "Ely Parkway Apartment",
-    address: "7203 20th Ave, Brooklyn",
-    bedrooms: 4,
-    bathrooms: 1,
-    area: 560,
-    price: "$5,800/month",
-    image: "/images/img2.png",
-    status: "For Sale",
-  },
-  {
-    id: 124,
-    location: "Modern Elegant Apartment",
-    address: "1458 W Taylor St",
-    bedrooms: 4,
-    bathrooms: 1,
-    area: 300,
-    price: "$590/month",
-    image: "/images/img7.png",
-    status: "For Sale",
-    delivery: "Featured",
-  },
-];
-const projects: Project[] = [
+const fallbackProjects: Project[] = [
   {
     id: 1,
     title: "New Cairo",
@@ -351,38 +99,371 @@ const projects: Project[] = [
   },
   {
     id: 3,
-    title: "Shekh Zayid",
+    title: "Sheikh Zayed",
     count: 1,
     image: "/images/c3.png",
-    link: "/projects/shekh-zayid",
+    link: "/projects/sheikh-zayed",
   },
 ];
 
 const Home: React.FC = () => {
+  const [units, setUnits] = useState<Unit[]>([]);
+  const [rentUnits, setRentUnits] = useState<Unit[]>([]);
+  const [saleUnits, setSaleUnits] = useState<Unit[]>([]);
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [searching, setSearching] = useState(false);
+  const [apiError, setApiError] = useState(false);
+  const [searchPerformed, setSearchPerformed] = useState(false);
+  const [searchFilters, setSearchFilters] = useState<SearchFilters | null>(null);
+
+  // Function to map API units to UI units
+  const mapApiUnitsToUiUnits = (apiUnits: any[]): Unit[] => {
+    return apiUnits.map(apiUnit => {
+      // Generate a price based on unit size
+      const areaSize = parseInt(apiUnit.unit_area) || 100;
+      const basePrice = areaSize * 1000; // Simple formula: $1000 per square meter
+      
+      // Format price based on rental or sale
+      const price = apiUnit.unit_status === "For Rent" 
+        ? `$${Math.round(basePrice / 200)}/month` 
+        : `$${basePrice.toLocaleString()}`;
+      
+      // Map locations based on type
+      let address = "Egypt";
+      if (apiUnit.unit_type?.toLowerCase().includes("villa")) {
+        address = "New Cairo, Egypt";
+      } else if (apiUnit.unit_type?.toLowerCase().includes("apartment")) {
+        address = "Sheikh Zayed, Egypt";
+      } else if (apiUnit.unit_type?.toLowerCase().includes("duplex")) {
+        address = "Maadi, Egypt";
+      }
+      
+      return {
+        id: apiUnit.id,
+        location: apiUnit.unit_type || "Apartment",
+        address: address,
+        bedrooms: apiUnit.number_of_bedrooms || 0,
+        bathrooms: apiUnit.number_of_bathrooms || 0,
+        area: parseInt(apiUnit.unit_area) || 0,
+        price: price,
+        image: apiUnit.media && apiUnit.media.length > 0 
+          ? apiUnit.media[0].original_url 
+          : `/images/img${(apiUnit.id % 8) + 1}.png`,
+        status: apiUnit.unit_status === "For Rent" ? "For Rent" : "For Sale",
+        delivery: Math.random() > 0.7 ? "Featured" : undefined,
+      };
+    });
+  };
+
+  // Initial data loading
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      setApiError(false);
+      
+      try {
+        console.log("Fetching initial data from API");
+        
+        // Fetch units from API
+        const unitsResponse = await unitService.getUnits();
+        
+        console.log("Units API response:", unitsResponse);
+        
+        if (unitsResponse?.data && unitsResponse.data.length > 0) {
+          const mappedUnits = mapApiUnitsToUiUnits(unitsResponse.data);
+          
+          setUnits(mappedUnits);
+          
+          // Filter units by status
+          setRentUnits(mappedUnits.filter(unit => unit.status === "For Rent"));
+          setSaleUnits(mappedUnits.filter(unit => unit.status === "For Sale"));
+        } else {
+          console.warn("No units data returned from API, using fallback data");
+          setUnits(fallbackUnits);
+          setRentUnits(fallbackUnits.filter(unit => unit.status === "For Rent"));
+          setSaleUnits(fallbackUnits.filter(unit => unit.status === "For Sale"));
+        }
+        
+        // Fetch projects from API
+        try {
+          console.log("Fetching projects from API");
+          
+          const projectsResponse = await projectService.getProjects();
+          
+          console.log("Projects API response:", projectsResponse);
+          
+          if (projectsResponse?.data && projectsResponse.data.length > 0) {
+            // Map API data to UI format
+            const mappedProjects: Project[] = projectsResponse.data.map((project, index) => {
+              // Extract city name from project name if possible
+              let title = project.name;
+              if (title.includes("Cairo")) {
+                title = "New Cairo";
+              } else if (title.includes("Zayed")) {
+                title = "Sheikh Zayed";
+              } else if (title.includes("October")) {
+                title = "October City";
+              }
+              
+              return {
+                id: index + 1,
+                title: title,
+                count: Math.floor(Math.random() * 10) + 1, // Random count since API doesn't provide this
+                image: `/images/c${(index % 3) + 1}.png`, // Cycle through available images
+                link: `/projects/${project.name.toLowerCase().replace(/\s+/g, '-')}`,
+              };
+            });
+            
+            setProjects(mappedProjects);
+          } else {
+            console.warn("No projects data returned from API, using fallback data");
+            setProjects(fallbackProjects);
+          }
+        } catch (projectError) {
+          console.error("Error fetching projects:", projectError);
+          // Fallback to default projects
+          setProjects(fallbackProjects);
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        toast.error("Could not connect to the API. Using sample data instead.");
+        setApiError(true);
+        
+        // Use fallback data
+        setUnits(fallbackUnits);
+        setRentUnits(fallbackUnits.filter(unit => unit.status === "For Rent"));
+        setSaleUnits(fallbackUnits.filter(unit => unit.status === "For Sale"));
+        setProjects(fallbackProjects);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchData();
+  }, []);
+
+  // Handle search function
+  const handleSearch = async (filters: SearchFilters) => {
+    setSearching(true);
+    setSearchPerformed(true);
+    setSearchFilters(filters);
+    
+    try {
+      console.log("Searching with filters:", filters);
+      
+      const searchResults = await searchService.searchUnits(filters);
+      
+      if (searchResults?.data && searchResults.data.length > 0) {
+        const mappedUnits = mapApiUnitsToUiUnits(searchResults.data);
+        setUnits(mappedUnits);
+        toast.success(`Found ${mappedUnits.length} units matching your criteria`);
+      } else {
+        setUnits([]);
+        toast.info("No units found matching your search criteria");
+      }
+    } catch (error) {
+      console.error("Error searching units:", error);
+      toast.error("Error searching units. Please try again.");
+      
+      // Fallback to filter the existing units client-side
+      const filteredUnits = units.filter(unit => {
+        let matches = true;
+        
+        if (filters.status && unit.status !== filters.status) {
+          matches = false;
+        }
+        
+        if (filters.unit_type && !unit.location.toLowerCase().includes(filters.unit_type.toLowerCase())) {
+          matches = false;
+        }
+        
+        if (filters.keyword && !(
+          unit.location.toLowerCase().includes(filters.keyword.toLowerCase()) ||
+          unit.address.toLowerCase().includes(filters.keyword.toLowerCase())
+        )) {
+          matches = false;
+        }
+        
+        if (filters.min_bedrooms && unit.bedrooms < filters.min_bedrooms) {
+          matches = false;
+        }
+        
+        if (filters.min_bathrooms && unit.bathrooms < filters.min_bathrooms) {
+          matches = false;
+        }
+        
+        if (filters.min_area && unit.area < filters.min_area) {
+          matches = false;
+        }
+        
+        if (filters.max_area && unit.area > filters.max_area) {
+          matches = false;
+        }
+        
+        return matches;
+      });
+      
+      setUnits(filteredUnits);
+      
+      if (filteredUnits.length > 0) {
+        toast.success(`Found ${filteredUnits.length} units matching your criteria (local search)`);
+      } else {
+        toast.info("No units found matching your search criteria");
+      }
+    } finally {
+      setSearching(false);
+    }
+  };
+
+  // Function to clear search and return to all listings
+  const clearSearch = () => {
+    setSearchPerformed(false);
+    setSearchFilters(null);
+    
+    // Restore original units
+    if (rentUnits.length > 0 || saleUnits.length > 0) {
+      setUnits([...rentUnits, ...saleUnits]);
+    } else {
+      setUnits(fallbackUnits);
+    }
+  };
+
   return (
     <div>
       <div className="container mx-auto p-4 sm:p-6">
-        <Header />
-        <ProjectsGrid projects={projects} />
+        <Header onSearch={handleSearch} />
+        
+        {loading || searching ? (
+          <div className="text-center py-10">
+            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mb-4"></div>
+            <p className="text-xl">{searching ? 'Searching...' : 'Loading properties...'}</p>
+          </div>
+        ) : (
+          <>
+            {apiError && (
+              <div className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-6">
+                <p className="font-bold">Notice</p>
+                <p>Could not connect to the API. Showing sample data instead.</p>
+              </div>
+            )}
+            
+            {/* Search results section */}
+            {searchPerformed && (
+              <div className="mt-6 mb-4">
+                <div className="flex items-center justify-between">
+                  <h2 className="text-xl font-bold">
+                    {units.length > 0 
+                      ? `Search Results (${units.length} properties found)`
+                      : 'No properties found matching your criteria'
+                    }
+                  </h2>
+                  <button 
+                    onClick={clearSearch}
+                    className="px-4 py-2 bg-gray-200 hover:bg-gray-300 rounded-md text-sm transition"
+                  >
+                    Clear Search
+                  </button>
+                </div>
+                
+                {searchFilters && (
+                  <div className="mt-2 mb-4 bg-gray-100 p-3 rounded-md text-sm">
+                    <p className="font-semibold">Search filters:</p>
+                    <div className="flex flex-wrap gap-2 mt-1">
+                      {searchFilters.status && (
+                        <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
+                          {searchFilters.status}
+                        </span>
+                      )}
+                      {searchFilters.unit_type && (
+                        <span className="bg-green-100 text-green-800 px-2 py-1 rounded-full">
+                          Type: {searchFilters.unit_type}
+                        </span>
+                      )}
+                      {searchFilters.keyword && (
+                        <span className="bg-purple-100 text-purple-800 px-2 py-1 rounded-full">
+                          "{searchFilters.keyword}"
+                        </span>
+                      )}
+                      {searchFilters.min_bedrooms && (
+                        <span className="bg-amber-100 text-amber-800 px-2 py-1 rounded-full">
+                          Min {searchFilters.min_bedrooms} Bedrooms
+                        </span>
+                      )}
+                      {searchFilters.min_bathrooms && (
+                        <span className="bg-teal-100 text-teal-800 px-2 py-1 rounded-full">
+                          Min {searchFilters.min_bathrooms} Bathrooms
+                        </span>
+                      )}
+                      {searchFilters.min_area && (
+                        <span className="bg-indigo-100 text-indigo-800 px-2 py-1 rounded-full">
+                          Min Area: {searchFilters.min_area} m²
+                        </span>
+                      )}
+                      {searchFilters.max_area && (
+                        <span className="bg-indigo-100 text-indigo-800 px-2 py-1 rounded-full">
+                          Max Area: {searchFilters.max_area} m²
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                )}
+                
+                {units.length > 0 ? (
+                  <Section
+                    title=""
+                    units={units}
+                    gridColumns="grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
+                    itemsPerPage={6}
+                    hideTitle
+                  />
+                ) : (
+                  <div className="text-center py-10 bg-gray-50 rounded-lg">
+                    <p className="text-gray-600">No properties found matching your search criteria.</p>
+                    <button 
+                      onClick={clearSearch}
+                      className="mt-4 px-6 py-2 bg-[#1F4B43] text-white rounded-full hover:bg-[#163b34] transition"
+                    >
+                      View All Properties
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
+            
+            {/* Regular content when no search is performed */}
+            {!searchPerformed && (
+              <>
+                <ProjectsGrid projects={projects.length > 0 ? projects : fallbackProjects} />
 
-        <Section
-          title="Discover Our Best Deals"
-          units={cardUnits}
-          gridColumns="grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
-          itemsPerPage={6}
-        />
-        <Section
-          title="Recent Properties for Rent"
-          units={rentProperties}
-          gridColumns="grid-cols-1 sm:grid-cols-2 lg:grid-cols-4"
-          itemsPerPage={4}
-        />
-        <Section
-          title="Recent Properties for Sale"
-          units={saleProperties}
-          gridColumns="grid-cols-1 sm:grid-cols-2 lg:grid-cols-4"
-          itemsPerPage={4}
-        />
+                <Section
+                  title="Discover Our Best Deals"
+                  units={units.length > 0 ? units : fallbackUnits}
+                  gridColumns="grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
+                  itemsPerPage={6}
+                />
+                
+                {rentUnits.length > 0 && (
+                  <Section
+                    title="Recent Properties for Rent"
+                    units={rentUnits}
+                    gridColumns="grid-cols-1 sm:grid-cols-2 lg:grid-cols-4"
+                    itemsPerPage={4}
+                  />
+                )}
+                
+                {saleUnits.length > 0 && (
+                  <Section
+                    title="Recent Properties for Sale"
+                    units={saleUnits}
+                    gridColumns="grid-cols-1 sm:grid-cols-2 lg:grid-cols-4"
+                    itemsPerPage={4}
+                  />
+                )}
+              </>
+            )}
+          </>
+        )}
       </div>
       <Footer />
     </div>
