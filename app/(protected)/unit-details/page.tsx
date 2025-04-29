@@ -8,6 +8,8 @@ import ProjectDetailsComponent from "@/app/_components/ProjectDetailsComponent/P
 import { useSearchParams } from "next/navigation";
 import { unitService, projectService } from "@/lib/api";
 import { toast } from "sonner";
+import Amenities from "./Amenities"; // Import the Amenities component
+import AmenityList from "./Amenities";
 
 // Fallback property details
 const fallbackPropertyData = [
@@ -28,13 +30,26 @@ const fallbackProjectDetails: ProjectDetails = {
   image: "/images/img1.png",
 };
 
+// Static amenities data
+const staticAmenities = [
+  { label: "Swimming Pool" },
+  { label: "Gym" },
+  { label: "Parking" },
+  { label: "Garden" },
+  { label: "Security" },
+  { label: "Wi-Fi" },
+  { label: "Elevator" },
+];
+
 const Page = () => {
   const searchParams = useSearchParams();
-  const unitId = searchParams.get('id');
+  const unitId = searchParams.get("id");
 
   const [loading, setLoading] = useState(true);
   const [propertyData, setPropertyData] = useState(fallbackPropertyData);
-  const [projectDetails, setProjectDetails] = useState<ProjectDetails>(fallbackProjectDetails);
+  const [projectDetails, setProjectDetails] = useState<ProjectDetails>(
+    fallbackProjectDetails
+  );
   const [error, setError] = useState(false);
 
   useEffect(() => {
@@ -55,7 +70,12 @@ const Page = () => {
             { label: "Unit Code", value: `U${unit.id}` },
             { label: "Unit Type", value: unit.unit_type || "Apartment" },
             { label: "Area", value: `${unit.unit_area} sqm` },
-            { label: "Delivery", value: new Date(unit.expected_delivery_date).getFullYear().toString() },
+            {
+              label: "Delivery",
+              value: new Date(unit.expected_delivery_date)
+                .getFullYear()
+                .toString(),
+            },
             { label: "Payment Option", value: "Installments" },
           ];
           setPropertyData(newPropertyData);
@@ -63,17 +83,22 @@ const Page = () => {
           // Try to fetch project data if we have project_id
           try {
             if (unit.project_id) {
-              const projectResponse = await projectService.getProject(unit.project_id);
+              const projectResponse = await projectService.getProject(
+                unit.project_id
+              );
               if (projectResponse && projectResponse.data) {
                 const project = projectResponse.data;
-                
+
                 // Update project details
                 setProjectDetails({
                   id: project.id || 1,
                   developerName: project.developer_name || "Developer",
-                  description: project.description || fallbackProjectDetails.description,
-                  developerDescription: project.developer_description || fallbackProjectDetails.developerDescription,
-                  image: project.image || "/images/img1.png",
+                  description:
+                    project.description || fallbackProjectDetails.description,
+                  developerDescription:
+                    project.developer_description ||
+                    fallbackProjectDetails.developerDescription,
+                  image: project.image || "/images/nour.png",
                 });
               }
             }
@@ -108,15 +133,23 @@ const Page = () => {
       {error && (
         <div className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-6">
           <p className="font-bold">Notice</p>
-          <p>Could not load all property information from API. Some sample data is being shown.</p>
+          <p>
+            Could not load all property information from API. Some sample data
+            is being shown.
+          </p>
         </div>
       )}
-      
+
       <UnitDetails />
       <div className="flex flex-col justify-between lg:flex-row gap-6">
         <div className="flex-1">
           <ProjectDetailsComponent project={projectDetails} />
           <PropertyDetails details={propertyData} />
+          {/* Add the amenities section */}
+          <div className="container mx-auto p-4">
+            <h2 className="text-2xl font-semibold mb-4">Amenities</h2>
+            <AmenityList />
+          </div>
         </div>
         <div className="w-full lg:w-[25%]">
           <UserForm unitId={unitId ? Number(unitId) : undefined} />
