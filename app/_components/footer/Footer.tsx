@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import { FacebookIcon } from "../svgs";
+import { FacebookIcon, InstagramIcon, LinkedinIcon } from "../svgs";
 
 interface FooterLink {
   label: string;
@@ -16,23 +16,20 @@ interface FooterSection {
 const Footer: React.FC = () => {
   const footerSections: FooterSection[] = [
     {
-      title: "Discover",
+      title: "Projects",
       links: [
-        { label: "New Cairo", href: "#" },
-        { label: "Future City", href: "#" },
-        { label: "Shikh Zayid", href: "#" },
+        { label: "New Alamein City", href: "projects/new-alamein-city" },
+        { label: "New Cairo", href: "/projects/new-cairo" },
+        { label: "Marassi", href: "/projects/marassi" },
       ],
     },
     {
       title: "Quick Links",
       links: [
-        { label: "About", href: "#" },
-        { label: "Contact", href: "#" },
-        { label: "FAQ's", href: "#" },
-        { label: "Blog", href: "#" },
-        { label: "Pricing Plans", href: "#" },
-        { label: "Privacy Policy", href: "#" },
-        { label: "Terms & Conditions", href: "#" },
+        { label: "Discover", href: "/" },
+        { label: "About Us", href: "about-us" },
+        { label: "Projects", href: "/projects" },
+  
       ],
     },
     {
@@ -76,14 +73,14 @@ const Footer: React.FC = () => {
           <div className="flex-1 gap-4 min-w-[100px] text-center">
             <h3 className="font-bold mb-2 text-white">Follow Us On</h3>
             <div className="flex justify-center space-x-4">
-             <Link href={""}>
+             <Link href={"https://www.facebook.com"}>
              <FacebookIcon/>
              </Link>
-             <Link href={""}>
-             <FacebookIcon/>
+             <Link href={"https://www.linkedin.com"}>
+             <LinkedinIcon/>
              </Link>
-             <Link href={""}>
-             <FacebookIcon/>
+             <Link href={"https://www.instagram.com"}>
+             <InstagramIcon/>
              </Link>
             </div>
           </div>

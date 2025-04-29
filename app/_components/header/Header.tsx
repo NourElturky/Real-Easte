@@ -24,8 +24,10 @@ interface HeaderProps {
 const Header: React.FC<HeaderProps> = ({ onSearch }) => {
   const { status } = useSession();
   const router = useRouter();
-  
-  const [activeTab, setActiveTab] = useState<"For Sale" | "For Rent">("For Sale");
+
+  const [activeTab] = useState<"For Sale" | "For Rent">(
+    "For Sale"
+  );
   const [selectedType, setSelectedType] = useState<string>("Type");
   const [showFilters, setShowFilters] = useState(false);
   const [keyword, setKeyword] = useState("");
@@ -47,18 +49,22 @@ const Header: React.FC<HeaderProps> = ({ onSearch }) => {
       const searchFilters: SearchFilters = {
         keyword,
         unit_type: selectedType !== "Type" ? selectedType : undefined,
-        status: activeTab as 'For Sale' | 'For Rent',
+        status: activeTab as "For Sale" | "For Rent",
       };
 
       // Add numeric filters when they're set
-      if (filters.bedrooms) searchFilters.min_bedrooms = parseInt(filters.bedrooms);
-      if (filters.bathrooms) searchFilters.min_bathrooms = parseInt(filters.bathrooms);
-      
+      if (filters.bedrooms)
+        searchFilters.min_bedrooms = parseInt(filters.bedrooms);
+      if (filters.bathrooms)
+        searchFilters.min_bathrooms = parseInt(filters.bathrooms);
+
       if (filters.minArea) searchFilters.min_area = parseInt(filters.minArea);
       if (filters.maxArea) searchFilters.max_area = parseInt(filters.maxArea);
-      
-      if (filters.minPrice) searchFilters.min_price = parseInt(filters.minPrice);
-      if (filters.maxPrice) searchFilters.max_price = parseInt(filters.maxPrice);
+
+      if (filters.minPrice)
+        searchFilters.min_price = parseInt(filters.minPrice);
+      if (filters.maxPrice)
+        searchFilters.max_price = parseInt(filters.maxPrice);
 
       console.log("Searching with filters:", searchFilters);
       onSearch(searchFilters);
@@ -80,7 +86,7 @@ const Header: React.FC<HeaderProps> = ({ onSearch }) => {
           <div className="flex justify-start gap-4 px-8 text-xs font-semibold">
             <Link href="/">Discover</Link>
             <Link href="/projects">Projects</Link>
-            <Link href="/contact">Contact</Link>
+            <Link href="/about-us">About Us</Link>
           </div>
           <div className="text-[16px] font-semibold flex items-center space-x-2">
             <LogoIcon />
@@ -108,36 +114,13 @@ const Header: React.FC<HeaderProps> = ({ onSearch }) => {
         {/* Hero Section */}
         <section className="py-16 text-center">
           <h1 className="text-xl font-semibold mb-4">
-            The <span className="text-blue-500">#1</span> site real estate
-            professionals trust*
+            The <span className="text-[#1F4B43]">#1</span> platform future
+            homeowners trust
           </h1>
           <p className="text-gray-600 mb-6">
-            From as low as $10 per day with limited-time offer discounts.
+            Explore top properties, compare options, and invest smarter — all in
+            one place.
           </p>
-
-          {/* Tabs for Sale & Rent */}
-          <div className="flex justify-center space-x-6 mb-6">
-            <button
-              className={`pb-2 ${
-                activeTab === "For Sale"
-                  ? "border-b-2 border-[#1F4B43] font-semibold"
-                  : "text-gray-500"
-              }`}
-              onClick={() => setActiveTab("For Sale")}
-            >
-              Sale
-            </button>
-            <button
-              className={`pb-2 ${
-                activeTab === "For Rent"
-                  ? "border-b-2 border-[#1F4B43] font-semibold"
-                  : "text-gray-500"
-              }`}
-              onClick={() => setActiveTab("For Rent")}
-            >
-              Rent
-            </button>
-          </div>
         </section>
 
         {/* Search Bar */}
@@ -200,38 +183,52 @@ const Header: React.FC<HeaderProps> = ({ onSearch }) => {
                       {/* Min Area */}
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <Button variant="outline" className="w-full justify-start text-xs">
+                          <Button
+                            variant="outline"
+                            className="w-full justify-start text-xs"
+                          >
                             {filters.minArea || "Min Area"}
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent>
-                          {[50, 75, 100, 125, 150, 175, 200, 250, 300].map((size) => (
-                            <DropdownMenuItem
-                              key={`min-area-${size}`}
-                              onClick={() => updateFilter("minArea", size.toString())}
-                            >
-                              {size} m²
-                            </DropdownMenuItem>
-                          ))}
+                          {[50, 75, 100, 125, 150, 175, 200, 250, 300].map(
+                            (size) => (
+                              <DropdownMenuItem
+                                key={`min-area-${size}`}
+                                onClick={() =>
+                                  updateFilter("minArea", size.toString())
+                                }
+                              >
+                                {size} m²
+                              </DropdownMenuItem>
+                            )
+                          )}
                         </DropdownMenuContent>
                       </DropdownMenu>
 
                       {/* Max Area */}
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <Button variant="outline" className="w-full justify-start text-xs">
+                          <Button
+                            variant="outline"
+                            className="w-full justify-start text-xs"
+                          >
                             {filters.maxArea || "Max Area"}
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent>
-                          {[100, 150, 200, 250, 300, 350, 400, 450, 500].map((size) => (
-                            <DropdownMenuItem
-                              key={`max-area-${size}`}
-                              onClick={() => updateFilter("maxArea", size.toString())}
-                            >
-                              {size} m²
-                            </DropdownMenuItem>
-                          ))}
+                          {[100, 150, 200, 250, 300, 350, 400, 450, 500].map(
+                            (size) => (
+                              <DropdownMenuItem
+                                key={`max-area-${size}`}
+                                onClick={() =>
+                                  updateFilter("maxArea", size.toString())
+                                }
+                              >
+                                {size} m²
+                              </DropdownMenuItem>
+                            )
+                          )}
                         </DropdownMenuContent>
                       </DropdownMenu>
                     </div>
@@ -241,7 +238,10 @@ const Header: React.FC<HeaderProps> = ({ onSearch }) => {
                       {/* Min Price Dropdown */}
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <Button variant="outline" className="w-full justify-start text-xs">
+                          <Button
+                            variant="outline"
+                            className="w-full justify-start text-xs"
+                          >
                             {filters.minPrice || "Min Price"}
                           </Button>
                         </DropdownMenuTrigger>
@@ -249,7 +249,12 @@ const Header: React.FC<HeaderProps> = ({ onSearch }) => {
                           {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((mil) => (
                             <DropdownMenuItem
                               key={`min-${mil}`}
-                              onClick={() => updateFilter("minPrice", (mil * 1_000_000).toString())}
+                              onClick={() =>
+                                updateFilter(
+                                  "minPrice",
+                                  (mil * 1_000_000).toString()
+                                )
+                              }
                             >
                               {mil}M EGP
                             </DropdownMenuItem>
@@ -260,7 +265,10 @@ const Header: React.FC<HeaderProps> = ({ onSearch }) => {
                       {/* Max Price Dropdown */}
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <Button variant="outline" className="w-full justify-start text-xs">
+                          <Button
+                            variant="outline"
+                            className="w-full justify-start text-xs"
+                          >
                             {filters.maxPrice || "Max Price"}
                           </Button>
                         </DropdownMenuTrigger>
@@ -268,7 +276,12 @@ const Header: React.FC<HeaderProps> = ({ onSearch }) => {
                           {[2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20].map((mil) => (
                             <DropdownMenuItem
                               key={`max-${mil}`}
-                              onClick={() => updateFilter("maxPrice", (mil * 1_000_000).toString())}
+                              onClick={() =>
+                                updateFilter(
+                                  "maxPrice",
+                                  (mil * 1_000_000).toString()
+                                )
+                              }
                             >
                               {mil}M EGP
                             </DropdownMenuItem>
@@ -280,15 +293,24 @@ const Header: React.FC<HeaderProps> = ({ onSearch }) => {
                     // Bathrooms / Bedrooms
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <Button variant="outline" className="w-full justify-start">
-                          {filters[key as keyof typeof filters] || `Select ${key}`}
+                        <Button
+                          variant="outline"
+                          className="w-full justify-start"
+                        >
+                          {filters[key as keyof typeof filters] ||
+                            `Select ${key}`}
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent className="w-full">
                         {[1, 2, 3, 4, 5, 6].map((value) => (
                           <DropdownMenuItem
                             key={value}
-                            onClick={() => updateFilter(key as keyof typeof filters, value.toString())}
+                            onClick={() =>
+                              updateFilter(
+                                key as keyof typeof filters,
+                                value.toString()
+                              )
+                            }
                           >
                             {value}
                           </DropdownMenuItem>
@@ -301,7 +323,7 @@ const Header: React.FC<HeaderProps> = ({ onSearch }) => {
             </DropdownMenuContent>
           </DropdownMenu>
 
-          <button 
+          <button
             className="bg-[#1F4B43] text-white px-4 py-2 rounded-full hover:bg-[#163b34] transition"
             onClick={handleSearch}
           >

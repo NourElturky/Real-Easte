@@ -17,43 +17,22 @@ export default function ProjectsPage() {
       id: 1,
       title: "New Cairo",
       count: 8,
-      image: "/images/c1.png",
+      image: "/images/new-cairo.png",
       link: "/projects/new-cairo",
     },
     {
       id: 2,
       title: "Future City",
       count: 2,
-      image: "/images/c2.png",
+      image: "/images/future.png",
       link: "/projects/future-city",
     },
     {
       id: 3,
       title: "Sheikh Zayed",
       count: 1,
-      image: "/images/c3.png",
+      image: "/images/shekh-zayed.png",
       link: "/projects/sheikh-zayed",
-    },
-    {
-      id: 4,
-      title: "Cairo Gate",
-      count: 4,
-      image: "/images/c1.png",
-      link: "/projects/cairo-gate",
-    },
-    {
-      id: 5,
-      title: "October Gardens",
-      count: 6,
-      image: "/images/c2.png",
-      link: "/projects/october-gardens",
-    },
-    {
-      id: 6,
-      title: "Madinaty",
-      count: 3,
-      image: "/images/c3.png",
-      link: "/projects/madinaty",
     },
   ];
 
@@ -66,19 +45,18 @@ export default function ProjectsPage() {
         if (response?.data && response.data.length > 0) {
           // Map API data to UI format
           const mappedProjects: Project[] = response.data.map((project, index) => {
-            // Extract city name from project name if possible
-            let title = project.name;
-            
+            const title = project.name;
+            const fallback = fallbackProjects[index];
+          
             return {
               id: index + 1,
-              title: title,
-              count: Math.floor(Math.random() * 10) + 1, // Random count since API doesn't provide this
-              image: `/images/c${(index % 3) + 1}.png`, // Cycle through available images
-              link: `/projects/${project.name.toLowerCase().replace(/\s+/g, '-')}`,
+              title,
+              count: Math.floor(Math.random() * 10) + 5,
+              image: fallback?.image ?? '/images/future.png',
+              link: `/projects/${title.toLowerCase().replace(/\s+/g, '-')}`,
             };
-          });
-          
-          setProjects(mappedProjects);
+          });  setProjects(mappedProjects); 
+
         } else {
           // Use fallback data if API returns empty
           setProjects(fallbackProjects);
@@ -99,9 +77,7 @@ export default function ProjectsPage() {
   return (
     <div>
       <Header />
-      <div className="container mx-auto p-4 sm:p-6">
-        <h1 className="text-2xl font-bold text-center mb-6">Our Projects</h1>
-        
+      <div className="container mx-auto p-4 sm:p-6">        
         {loading ? (
           <div className="text-center py-10">
             <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mb-4"></div>
@@ -109,9 +85,9 @@ export default function ProjectsPage() {
           </div>
         ) : (
           <>
-            <ProjectsGrid projects={projects.length > 0 ? projects : fallbackProjects} />
+<ProjectsGrid projects={projects.length > 0 ? projects : fallbackProjects} />
             
-            <div className="bg-white p-6 rounded-lg shadow-md my-8">
+            <div className="bg-white p-6 rounded-lg shadow-md my-4">
               <h2 className="text-xl font-bold mb-4">About Our Projects</h2>
               <p className="text-gray-700 mb-4">
                 Our real estate projects are designed with the highest standards of quality and comfort in mind. 

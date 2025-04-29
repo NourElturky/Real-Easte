@@ -7,3 +7,5 @@ export * from "./FacebookIcon";
 export * from "./RightArrowIcon";
 export * from "./LeftArrowIcon";
 export * from "./LogoIcon";
+export * from "./LinkedinIcon";
+export * from "./InstagramIcon";
